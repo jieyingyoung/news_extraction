@@ -8,7 +8,6 @@ from opencc import OpenCC
 def open_texts(json_file):
     return json.loads(open(json_file, 'r', encoding='utf-8').read())
 
-
 # one way of cleaning the texts
 def remove_symbles(texts):
     texts_without_symbles =re.findall(r'(\w+)',texts)
@@ -37,8 +36,8 @@ def cut_texts(string):
     return list(jieba.cut(str(string).strip()))
 
 
-def save_content(content_list):
-    with open('wiki_texts_{}_pure.json'.format(number), 'w') as tx:
+def save_content(output_file,content_list):
+    with open(output_file, 'w') as tx:
         json.dump(content_list, tx)
     return
 
@@ -53,5 +52,6 @@ if __name__ == '__main__':
     texts_simple = convert_chinese(str(texts_pure),'t2s')
     tokens = cut_texts(texts_simple)
     print(tokens)
+    output_file = '../data/wiki_texts_{}_tokens.json'.format(number)
     save_content(tokens)
 
