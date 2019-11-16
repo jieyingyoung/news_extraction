@@ -1,4 +1,5 @@
 import json
+import os
 
 def extract_texts(file):
     texts = ''
@@ -10,18 +11,23 @@ def extract_texts(file):
             texts += text
     return texts
 
-def save_content(content_list):
-    with open('wiki_texts_{}.json'.format(number),'w') as tx:
-        json.dump(content_list,tx)
+def save_content(output_file,content):
+    with open(output_file,'w') as tx:
+        json.dump(content,tx)
     return
 
-def open_texts(json_file):
-    return json.loads(open(json_file, 'r', encoding='utf-8').read())
+def mkdir(path):
+    folder = os.path.exists(path)
+    if not folder:  # 判断是否存在文件夹如果不存在则创建为文件夹
+        os.makedirs(path)  # makedirs 创建文件时如果路径不存在会创建这个路径
+        print("---  new folder 'data' created !  ---")
+    return
 
 if __name__ == '__main__':
     numbers = ['test', '00', '01']
     number = numbers[0]
     input_file = 'C:/Users/psyji/Dropbox/data/wikiextractor/cnwiki/AA/wiki_{}'.format(number) #test,small
     texts = extract_texts(input_file)
-    save_content(texts)
-    # texts = open_texts('texts_{}.json'.format(number))
+    output_file = '../data/wiki_texts_{}.json'.format(number)
+    mkdir('../data')
+    save_content(output_file,texts)
