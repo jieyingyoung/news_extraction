@@ -8,12 +8,12 @@ def extract_texts(file):
         for line in f:
             # read the line as valid json and select text field
             text = json.loads(line)['text']
-            texts += text
+            texts += "".join(text)
     return texts
 
 def save_content(output_file,content):
-    with open(output_file,'w') as tx:
-        json.dump(content,tx)
+    with open(output_file,'w',encoding='utf-8') as tx:
+        tx.write(str(content))
     return
 
 def mkdir(path):
@@ -28,6 +28,6 @@ if __name__ == '__main__':
     number = numbers[0]
     input_file = 'C:/Users/psyji/Dropbox/data/wikiextractor/cnwiki/AA/wiki_{}'.format(number) #test,small
     texts = extract_texts(input_file)
-    output_file = '../data/wiki_texts_{}.json'.format(number)
+    output_file = '../data/wiki_texts_{}_origin.txt'.format(number)
     mkdir('../data')
     save_content(output_file,texts)

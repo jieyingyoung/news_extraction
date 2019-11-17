@@ -4,13 +4,13 @@ import json
 import re
 import jieba
 from opencc import OpenCC
-
-def open_texts(json_file):
-    return json.loads(open(json_file, 'r', encoding='utf-8').read())
+# import jieba.analyse
+import codecs
 
 # one way of cleaning the texts
 def remove_symbles(texts):
-    texts_without_symbles =re.findall(r'(\w+)',texts)
+    symbles = '「」:：;、“”；·()（）{}《》，。!,;:?""'
+    texts_without_symbles =re.sub(r'[{}]+'.format(symbles),'',texts)
     texts_without_digits = [re.sub(r'\d+','',line) for line in texts_without_symbles]
     texts_without_English = [re.sub("[a-zA-z]+","",line) for line in texts_without_digits]
     return texts_without_English
@@ -35,23 +35,32 @@ def convert_chinese(string,config):
 def cut_texts(string):
     return list(jieba.cut(str(string).strip()))
 
-
-def save_content(output_file,content_list):
-    with open(output_file, 'w') as tx:
-        json.dump(content_list, tx)
-    return
-
 if __name__ == '__main__':
     # input_file = sys.argv[0]
     numbers = ['test', '00', '01']
     number = numbers[0]
-    file_path = 'C:/Users/psyji/Dropbox/AI_Course_NLP/__project1__/news_extraction/'
-    file = 'wiki_texts_{}.json'.format(number)
-    texts_with_symbles = open_texts(file_path+file)
-    texts_pure = remove_symbles(texts_with_symbles)
-    texts_simple = convert_chinese(str(texts_pure),'t2s')
-    tokens = cut_texts(texts_simple)
-    print(tokens)
-    output_file = '../data/wiki_texts_{}_tokens.json'.format(number)
-    save_content(tokens)
+    # 以读的方式打开原始的简体中文语料库
+    input_path = '../data/wiki_texts_{}_origin.txt'.format(number)
+    f = codecs.open(input_path, 'r', encoding="utf8")
+    # 将分完词的语料写入到wiki_texts_test_tokens3.txt文件中
+    output_path = '../data/wiki_texts_{}_tokens.txt'.format(number)
+    output_file = codecs.open(output_path, 'w', encoding="utf8")
+
+    line_num = 1
+    line = f.readline()
+
+    # 循环遍历每一行，并对这一行进行分词,繁体转简体和去除标点符号操作
+    while line:
+        print('---- processing ', line_num, ' article----------------')
+        line_seg = " ".join(jieba.cut(line))
+        line_simple = convert_chinese(str(line_seg), 't2s')
+        line_without_symples = remove_symbles(line_simple)
+        output_file.writelines(line_without_symples)
+        line_num = line_num + 1
+        line = f.readline()
+
+    # 关闭两个文件流，并退出程序
+    f.close()
+    output_file.close()
+    exit()
 
