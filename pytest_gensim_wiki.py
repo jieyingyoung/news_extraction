@@ -46,7 +46,7 @@ def tsne_plot(model):
     plt.show()
 
 if __name__ == '__main__':
-    MODEL_PATH = "../model/word2vec_gensim.model"
+    MODEL_PATH = "../model/word2vec_normal_full.model"
     model = gensim.models.Word2Vec.load(MODEL_PATH)
 
     # test1-similarity
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     # vector visualization
     # tsne_plot(model)
 
-    MODEL_SELECTIVE_PATH = "../model/word2vec_selective.model"
+    MODEL_SELECTIVE_PATH = "../model/word2vec_selective_10000.model"
     model_selevtive = gensim.models.Word2Vec.load(MODEL_SELECTIVE_PATH)
     tsne_plot(model_selevtive)
 

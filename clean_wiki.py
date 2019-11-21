@@ -6,6 +6,7 @@ import jieba
 from opencc import OpenCC
 # import jieba.analyse
 import codecs
+from time import time
 
 # one way of cleaning the texts
 def remove_symbles(texts):
@@ -36,9 +37,10 @@ def cut_texts(string):
     return list(jieba.cut(str(string).strip()))
 
 if __name__ == '__main__':
+    begin = time()
     # input_file = sys.argv[0]
     numbers = ['test', '00', '01']
-    number = numbers[0]
+    number = numbers[2]
     # 以读的方式打开原始的简体中文语料库
     input_path = '../data/wiki_texts_{}_origin.txt'.format(number)
     f = codecs.open(input_path, 'r', encoding="utf8")
@@ -62,5 +64,6 @@ if __name__ == '__main__':
     # 关闭两个文件流，并退出程序
     f.close()
     output_file.close()
+    end = time()
+    print("wiki-01 cleaning time: %d seconds" % (end - begin))
     exit()
-
